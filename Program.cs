@@ -20,7 +20,11 @@ namespace ProxyChanger
         {
             string proxy = String.Empty;
             int enabled = 0;
-            if (args.Contains("--enable"))
+            if (args.Contains("--help"))
+            {
+                ShowUsage();
+            }
+            else if (args.Contains("--enable"))
             {
                 var arguments = args.ToList();
                 proxy = arguments[arguments.IndexOf("--enable") + 1];
@@ -29,8 +33,7 @@ namespace ProxyChanger
             else if (args.Contains("--disable") || args.Contains("-d")) { }
             else
             {
-                Console.WriteLine("Usage: --enable [IP:PORT] ] or -e");
-                Console.WriteLine("       --disable or -d");
+                ShowUsage();
             }
 
             RegistryKey registry = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings", true);
@@ -43,6 +46,12 @@ namespace ProxyChanger
             refreshReturn = InternetSetOption(IntPtr.Zero, INTERNET_OPTION_REFRESH, IntPtr.Zero, 0);
 
             Console.WriteLine("Proxy server successfully " + ((enabled == 1) ? ("set to " + proxy) : "Disabled"));
+        }
+        public static void ShowUsage()
+        {
+            Console.WriteLine("Usage: --enable [IP:PORT] ] or -e");
+            Console.WriteLine("       --disable or -d");
+            Console.WriteLine("\nThe followin program changes the proxy server ip and \nFLUSHES all connections to immediately update the server ip");
         }
     }
 }
